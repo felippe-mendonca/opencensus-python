@@ -26,7 +26,7 @@ install_requires = [
 ]
 
 setup(
-    name='opencensus',
+    name='is_opencensus',
     version='0.1.5',
     author='OpenCensus Authors',
     author_email='census-developers@googlegroups.com',
@@ -51,4 +51,4 @@ setup(
     license='Apache-2.0',
     packages=find_packages(),
     namespace_packages=[],
-    url='https://github.com/census-instrumentation/opencensus-python')
+    url='https://github.com/felippe-mendonca/opencensus-python')

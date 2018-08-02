@@ -175,7 +175,7 @@ class TestZipkinExporter(unittest.TestCase):
                 'id': '6e0c63257de34c92',
                 'parentId': '6e0c63257de34c93',
                 'name': 'child_span',
-                'timestamp': 1502820146000000,
+                'timestamp': 1502820146071158,
                 'duration': 10000000,
                 'localEndpoint': local_endpoint_ipv4,
                 'tags': {'test_key': 'test_value'},
@@ -185,7 +185,7 @@ class TestZipkinExporter(unittest.TestCase):
                 'id': '6e0c63257de34c92',
                 'parentId': '6e0c63257de34c93',
                 'name': 'child_span',
-                'timestamp': 1502820146000000,
+                'timestamp': 1502820146071158,
                 'duration': 10000000,
                 'localEndpoint': local_endpoint_ipv4,
                 'tags': {'test_key': '1'},
@@ -197,7 +197,7 @@ class TestZipkinExporter(unittest.TestCase):
                 'traceId': '6e0c63257de34c92bf9efcd03927272e',
                 'id': '6e0c63257de34c92',
                 'name': 'child_span',
-                'timestamp': 1502820146000000,
+                'timestamp': 1502820146071158,
                 'duration': 10000000,
                 'localEndpoint': local_endpoint_ipv6,
                 'tags': {'test_key': 'False', 'test_key2': 'raw_value'},
@@ -208,45 +208,25 @@ class TestZipkinExporter(unittest.TestCase):
         # Test ipv4 local endpoint
         exporter_ipv4 = zipkin_exporter.ZipkinExporter(
             service_name='my_service', ipv4=ipv4)
-        ipv4_trace = span_data_module.format_legacy_trace_json(spans_ipv4)
         zipkin_spans_ipv4 = exporter_ipv4.translate_to_zipkin(
-            trace_id=trace_id,
-            spans=ipv4_trace.get('spans'))
+            span_datas=spans_ipv4)
 
         self.assertEqual(zipkin_spans_ipv4, expected_zipkin_spans_ipv4)
 
         # Test ipv6 local endpoint
         exporter_ipv6 = zipkin_exporter.ZipkinExporter(
             service_name='my_service', ipv6=ipv6)
-        ipv6_trace = span_data_module.format_legacy_trace_json(spans_ipv6)
         zipkin_spans_ipv6 = exporter_ipv6.translate_to_zipkin(
-            trace_id=trace_id,
-            spans=ipv6_trace.get('spans')
-        )
+            span_datas=spans_ipv6)
 
         self.assertEqual(zipkin_spans_ipv6, expected_zipkin_spans_ipv6)
 
     def test_ignore_incorrect_spans(self):
-        span1 = {
-            'attributes': {
-                'attributeMap': {
-                    'float_value': {
-                        'value': 0.1
-                    }
-                }
-            }
-        }
-        self.assertEqual(zipkin_exporter._extract_tags_from_span(span1), {})
+        attributes = {'float_value': 0.1}
+        self.assertEqual(zipkin_exporter._extract_tags_from_span(attributes), {})
 
-        span2 = {
-            'attributes': {
-                'attributeMap': {
-                    'bool_value': False
-                }
-
-            }
-        }
-        self.assertEqual(zipkin_exporter._extract_tags_from_span(span2), {})
+        attributes = None
+        self.assertEqual(zipkin_exporter._extract_tags_from_span(attributes), {})
 
 
 class MockTransport(object):

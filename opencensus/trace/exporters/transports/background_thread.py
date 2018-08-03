@@ -201,14 +201,29 @@ class BackgroundThreadTransport(base.Transport):
                            in the background thread.
     """
 
-    def __init__(self, exporter, grace_period=_DEFAULT_GRACE_PERIOD,
+    def __init__(self, grace_period=_DEFAULT_GRACE_PERIOD,
                  max_batch_size=_DEFAULT_MAX_BATCH_SIZE):
+        self.exporter = None
+        self.worker = None
+        self.grace_period = grace_period
+        self.max_batch_size = max_batch_size
+
+    def set_exporter(self, exporter):
+        if self.exporter is not None:
+            raise Exception("Exporter already set. Isn't possible to reset " \
+                + " it.")
         self.exporter = exporter
-        self.worker = _Worker(exporter, grace_period, max_batch_size)
+        self.worker = _Worker(
+            exporter = self.exporter,
+            grace_period = self.grace_period,
+            max_batch_size = self.max_batch_size
+        )
         self.worker.start()
 
     def export(self, span_datas):
         """Put the trace to be exported into queue."""
+        if self.exporter is None:
+            raise Exception("Exporter must be set before")
         self.worker.enqueue(span_datas)
 
     def flush(self):

@@ -20,6 +20,13 @@ class Transport(object):
 
     Subclasses of :class:`Transport` must override :meth:`export`.
     """
+
+    def set_exporter(self, exporter):
+        """"Add the exporter to the transporter.
+        
+        Commonly used on exporters constructors"""
+        self.exporter = exporter
+
     def export(self, span_datas):
         """Export the SpanData tuples by calling exporter.emit()."""
         raise NotImplementedError

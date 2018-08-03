@@ -16,8 +16,10 @@ from opencensus.trace.exporters.transports import base
 
 
 class SyncTransport(base.Transport):
-    def __init__(self, exporter):
-        self.exporter = exporter
+    def __init__(self):
+        self.exporter = None
 
     def export(self, span_datas):
+        if self.exporter is None:
+            raise Exception("Exporter must be set before")
         self.exporter.emit(span_datas)

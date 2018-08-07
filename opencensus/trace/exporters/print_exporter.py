@@ -29,8 +29,10 @@ class PrintExporter(base.Exporter):
                       :class:`.BackgroundThreadTransport`.
     """
 
-    def __init__(self, transport=sync.SyncTransport):
-        self.transport = transport(self)
+    def __init__(self, transport=None):
+        self.transport = sync.SyncTransport() if transport is None else \
+            transport
+        self.transport.set_exporter(self)
 
     def emit(self, span_datas):
         """

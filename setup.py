@@ -27,7 +27,7 @@ install_requires = [
 
 setup(
     name='is_opencensus',
-    version='0.1.5.2',
+    version='0.1.5.3',
     author='OpenCensus Authors',
     author_email='census-developers@googlegroups.com',
     classifiers=[

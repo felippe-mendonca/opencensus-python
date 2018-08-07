@@ -33,15 +33,18 @@ class TestPrintExporter(unittest.TestCase):
         exporter.emit(traces)
 
     def test_export(self):
-        exporter = self._make_one(transport=MockTransport)
+        exporter = self._make_one(transport=MockTransport())
         exporter.export({})
 
         self.assertTrue(exporter.transport.export_called)
 
 
 class MockTransport(object):
-    def __init__(self, exporter=None):
+    def __init__(self):
         self.export_called = False
+        self.exporter = None
+
+    def set_exporter(self, exporter):
         self.exporter = exporter
 
     def export(self, trace):
